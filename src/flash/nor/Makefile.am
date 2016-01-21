@@ -47,6 +47,7 @@ NOR_DRIVERS = \
 	kinetis.c \
 	numicro.c \
 	nrf51.c \
+	nrf52.c \
 	mrvlqspi.c \
 	psoc4.c \
 	sim3x.c \
