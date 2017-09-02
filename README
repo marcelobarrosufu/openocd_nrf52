@@ -1,3 +1,64 @@
+Guidelines for nRF52
+====================
+
+Original openocd code with nrf52 patch applied for using together stlink v2.
+
+If you are using Ubuntu, add the following packages:
+
+  sudo apt install build-essential libtool automake autoconf m4 libusb-dev  libusb-1.0-0-dev libhidapi-dev libftdi1-dev
+
+For compiling, go to repository and do the following (remove some options if you want, but keep stlink):
+
+  ./bootstrap
+  ./configure --prefix=/home/$USER/bin/openocd_nrf --enable-verbose --enable-ftdi --enable-stlink \
+              --enable-ti-icdi --enable-ulink --enable-usb-blaster-2 --enable-vsllink --enable-aice  \
+              --enable-usbprog --enable-rlink --enable-armjtagew --enable-cmsis-dap --enable-usb-blaster \
+              --enable-openjtag --enable-jlink      
+  make && make install
+
+Create an openocd config (nrf52.cfg) with following contents:
+
+  source [find interface/stlink-v2.cfg]
+  transport select "hla_swd"
+  source [find target/nrf52.cfg]
+
+Run openocd using this script:
+
+  ~/bin/openocd/bin/openocd -s ~/bin/openocd/share/openocd/scripts/ -f <path_to_file>/nrf52.cfg 
+
+From telnet, connect and write the softdevice (we are using S132):
+
+  telnet 127.0.0.1 4444
+  reset init
+  reset halt
+  program <path_to_nordic_sdk14>/components/softdevice/s132/hex/s132_nrf52_5.0.0_softdevice.hex  verify 
+
+Now, you can run examples and debug using gdb. For instance, running HID mouse demo:
+
+  cd <path_to_nordic_sdk14>/examples/ble_peripheral/ble_app_hids_mouse/pca10040/s132/armgcc/
+  make
+  <path_to_arm_toolchain>/arm-none-eabi-gdb
+  tar remote :3333
+  monitor reset init
+  monitor reset halt
+  file _build/nrf52832_xxaa.out
+  load
+  b main
+  tui enable
+  c
+
+If the code hangs on ble_stack_init(), type ctrl-c, monitor reset init, monitor reset halt and try again.
+
+Original code:
+
+  git clone https://git.code.sf.net/p/openocd/code openocd_nrf52
+
+Patch (See https://devzone.nordicsemi.com/question/78890/programming-nrf52-with-openocd/):
+  
+  openocd_nrf52
+  git pull http://openocd.zylin.com/openocd refs/changes/15/3215/2
+
+
 Welcome to OpenOCD!
 ===================
 
