@@ -779,7 +779,7 @@ static void armjtagew_debug_buffer(uint8_t *buffer, int length)
 	int j;
 
 	for (i = 0; i < length; i += BYTES_PER_LINE) {
-		snprintf(line, 5, "%04x", i);
+		snprintf(line, 9, "%08x", i);
 		for (j = i; j < i + BYTES_PER_LINE && j < length; j++) {
 			snprintf(s, 4, " %02x", buffer[j]);
 			strcat(line, s);

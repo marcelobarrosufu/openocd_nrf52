@@ -7,6 +7,10 @@ If you are using Ubuntu, add the following packages:
 
   sudo apt install build-essential libtool automake autoconf m4 libusb-dev  libusb-1.0-0-dev libhidapi-dev libftdi1-dev
 
+For Fedora (still :
+
+  sudo dnf install hidapi-devel libftdi-devel libusb-devel make automake gcc gcc-c++ m4 libtool automake autoconf 
+
 For compiling, go to repository and do the following (remove some options if you want, but keep stlink):
 
   ./bootstrap
